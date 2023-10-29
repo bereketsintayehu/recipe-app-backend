@@ -1,23 +1,24 @@
 const mongoose = require('mongoose');
-const ingredient = mongoose.Schema({
-    name: {type: String, required: true, unique: true},
-    photo_url: {type: String, required: true},
+const ingredientSchema = mongoose.Schema({
+    name: { type: String, required: true, unique: true },
+    photo_url: { type: String, required: true },
 },
 {
     toJSON: { virtuals: true },
     toObject: { virtuals: true }
-}
-)
-ingredient.virtual('recipes', {
+});
+
+ingredientSchema.virtual('recipes', {
     ref: 'Recipe',
     foreignField: 'ingredients',
     localField: '_id'
-}),
+});
 
-ingredient.pre(/^find/, function(next) {
+ingredientSchema.pre(/^find/, function(next) {
     this.populate({
-      path: 'ingre',
+        path: 'recipes',
     });
     next();
-  });
-module.exports = mongoose.model('Ingredient', ingredient);
+});
+
+module.exports = mongoose.model('Ingredient', ingredientSchema);
